@@ -1754,34 +1754,23 @@ summary {
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2Qgb3ZlcndyaXR0ZW4gYnkgJ2RwbHlyJzpcbiAgbWV0aG9kICAgICAgICAgICBmcm9tXG4gIHByaW50LnJvd3dpc2VfZGYgICAgIFxuXHUwMDFiWzMwbS0tIFx1MDAxYlsxbUF0dGFjaGluZyBwYWNrYWdlc1x1MDAxYlsyMm0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZSAxLjIuMSAtLVx1MDAxYlszOW1cblx1MDAxYlszMG1cdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bWdncGxvdDJcdTAwMWJbMzBtIDMuMi4xICAgICBcdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bXB1cnJyICBcdTAwMWJbMzBtIDAuMy4yXG5cdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bXRpYmJsZSBcdTAwMWJbMzBtIDIuMS4zICAgICBcdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bWRwbHlyICBcdTAwMWJbMzBtIDAuOC4zXG5cdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bXRpZHlyICBcdTAwMWJbMzBtIDEuMC4wICAgICBcdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bXN0cmluZ3JcdTAwMWJbMzBtIDEuNC4wXG5cdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bXJlYWRyICBcdTAwMWJbMzBtIDEuMy4xICAgICBcdTAwMWJbMzJtdlx1MDAxYlszMG0gXHUwMDFiWzM0bWZvcmNhdHNcdTAwMWJbMzBtIDAuNC4wXHUwMDFiWzM5bVxuXHUwMDFiWzMwbS0tIFx1MDAxYlsxbUNvbmZsaWN0c1x1MDAxYlsyMm0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZV9jb25mbGljdHMoKSAtLVxuXHUwMDFiWzMxbXhcdTAwMWJbMzBtIFx1MDAxYlszNG1kcGx5clx1MDAxYlszMG06Olx1MDAxYlszMm1maWx0ZXIoKVx1MDAxYlszMG0gbWFza3MgXHUwMDFiWzM0bXN0YXRzXHUwMDFiWzMwbTo6ZmlsdGVyKClcblx1MDAxYlszMW14XHUwMDFiWzMwbSBcdTAwMWJbMzRtZHBseXJcdTAwMWJbMzBtOjpcdTAwMWJbMzJtbGFnKClcdTAwMWJbMzBtICAgIG1hc2tzIFx1MDAxYlszNG1zdGF0c1x1MDAxYlszMG06OmxhZygpXHUwMDFiWzM5bVxuIn0= -->
-<pre><code>Registered S3 method overwritten by &#39;dplyr&#39;:
-  method           from
-  print.rowwise_df     
-[30m-- [1mAttaching packages[22m --------------------------------------- tidyverse 1.2.1 --[39m
-[30m[32mv[30m [34mggplot2[30m 3.2.1     [32mv[30m [34mpurrr  [30m 0.3.2
-[32mv[30m [34mtibble [30m 2.1.3     [32mv[30m [34mdplyr  [30m 0.8.3
-[32mv[30m [34mtidyr  [30m 1.0.0     [32mv[30m [34mstringr[30m 1.4.0
-[32mv[30m [34mreadr  [30m 1.3.1     [32mv[30m [34mforcats[30m 0.4.0[39m
-[30m-- [1mConflicts[22m ------------------------------------------ tidyverse_conflicts() --
-[31mx[30m [34mdplyr[30m::[32mfilter()[30m masks [34mstats[30m::filter()
-[31mx[30m [34mdplyr[30m::[32mlag()[30m    masks [34mstats[30m::lag()[39m</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTWVhc2xlc091dGJyZWFrcyA8LSByZWFkX2NzdihcIkM6XFxcXFVzZXJzXFxcXExpenppZVxcXFxEb3dubG9hZHNcXFxcTWVhc2xlc091dGJyZWFrcy5jc3ZcIilcblxuTWVhc2xlc1ZhYzEgPC0gcmVhZF9jc3YoXCJDOlxcXFxVc2Vyc1xcXFxMaXp6aWVcXFxcRG93bmxvYWRzXFxcXE1lYXNsZXMxVmFjLmNzdlwiKVxuXG5NZWFzbGVzVmFjMiA8LSByZWFkX2NzdihcIkM6XFxcXFVzZXJzXFxcXExpenppZVxcXFxEb3dubG9hZHNcXFxcTWVhc2xlczJWYWMuY3N2XCIpXG5cbk1lYXNsZXNPdXRicmVha3Ncbk1lYXNsZXNWYWMxXG5NZWFzbGVzVmFjMlxuXG5gYGAifQ== -->
-<pre class="r"><code>MeaslesOutbreaks &lt;- read_csv(&quot;C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuTWVhc2xlc091dGJyZWFrcyA8LSByZWFkX2NzdihcXEM6XFxcXFVzZXJzXFxcXExpenppZVxcXFxEb3dubG9hZHNcXFxcTWVhc2xlc091dGJyZWFrcy5jc3ZcXClcblxuTWVhc2xlc1ZhYzEgPC0gcmVhZF9jc3YoXFxDOlxcXFxVc2Vyc1xcXFxMaXp6aWVcXFxcRG93bmxvYWRzXFxcXE1lYXNsZXMxVmFjLmNzdlxcKVxuXG5NZWFzbGVzVmFjMiA8LSByZWFkX2NzdihcXEM6XFxcXFVzZXJzXFxcXExpenppZVxcXFxEb3dubG9hZHNcXFxcTWVhc2xlczJWYWMuY3N2XFwpXG5cbk1lYXNsZXNPdXRicmVha3Ncbk1lYXNsZXNWYWMxXG5NZWFzbGVzVmFjMlxuXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+MeaslesOutbreaks &lt;- read_csv(\C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv\)
 
-MeaslesVac1 &lt;- read_csv(&quot;C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv&quot;)
+MeaslesVac1 &lt;- read_csv(\C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv\)
 
-MeaslesVac2 &lt;- read_csv(&quot;C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv&quot;)
+MeaslesVac2 &lt;- read_csv(\C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv\)
 
 MeaslesOutbreaks
 MeaslesVac1
 MeaslesVac2
 </code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

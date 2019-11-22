@@ -4,3 +4,26 @@ author: Elizabeth Giacobe
 output: html_notebook
 ---
 
+```{r}
+library(tidyverse)
+```
+
+
+```{r, message=FALSE}
+MeaslesOutbreaks <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
+
+MeaslesVac1 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
+
+MeaslesVac2 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
+
+```
+
+```{r}
+MeaslesOutbreaksClean <-
+  MeaslesOutbreaks %>%
+  rename("year" = "YEAR (DISPLAY)", "region" = "REGION (DISPLAY)", "income_group" = "WORLDBANKINCOMEGROUP (DISPLAY)", "country" = "COUNTRY (DISPLAY)", "outbreaks" = "Display Value") %>%
+  select(year, region, income_group, country, outbreaks)
+
+MeaslesOutbreaksClean
+```
+
