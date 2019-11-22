@@ -4,7 +4,7 @@ author: Elizabeth Giacobe
 output: html_notebook
 ---
 
-```{r}
+```{r, message= FALSE}
 library(tidyverse)
 ```
 
@@ -25,5 +25,11 @@ MeaslesOutbreaksClean <-
   select(year, region, income_group, country, outbreaks)
 
 MeaslesOutbreaksClean
+```
+
+```{r}
+MeaslesVac1 
+# clean so that first row is the variable name
+  
 ```
 
