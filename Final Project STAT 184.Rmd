@@ -4,7 +4,10 @@ author: Elizabeth Giacobe
 output: html_notebook
 ---
 
+## Set Up
 ```{r, message= FALSE}
+rm(list = ls()) #clean ups
+
 library(tidyverse)
 ```
 
@@ -28,8 +31,14 @@ MeaslesOutbreaksClean
 ```
 
 ```{r}
-MeaslesVac1 
-# clean so that first row is the variable name
-  
+"data" <- MeaslesVac1
+
+names(data)[2]<-"2018"
+names(data)[3]<-"2017"
+names(data)[4]<-"2016"
+
+# clean so that first row is the variable name (can I use a loop)
+
+data
 ```
 
