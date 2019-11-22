@@ -1,0 +1,29 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+MeaslesOutbreaks <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
+
+MeaslesVac1 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
+
+MeaslesVac2 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
+
+MeaslesOutbreaks
+MeaslesVac1
+MeaslesVac2
+
+```
+
+
+
+https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance
+
+https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita
+
+https://www.who.int/gho/database/en/
