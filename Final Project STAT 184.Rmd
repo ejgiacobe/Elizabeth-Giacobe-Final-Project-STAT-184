@@ -90,7 +90,7 @@ MeaslesVac2Narrow <-
 ```
 ```{r}
 MeaslesVacBoth <-
-  left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = "Country", "Country")
+  left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = c("Country", "year"))
   
 MeaslesVacBoth
 
