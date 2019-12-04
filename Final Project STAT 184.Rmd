@@ -4,15 +4,25 @@ author: Elizabeth Giacobe
 output: html_notebook
 ---
 
-## Set Up
-```{r, message= FALSE}
-rm(list = ls()) #clean ups
+## Research Question
+- How does the measles virus spread in different areas?
+- Does population density and travel distance affect this? 
 
+
+## Data Access
+*(3) Access to all data sources is contained within the analysis*
+
+```{r, message= FALSE}
+#clean ups
+rm(list = ls()) 
+
+#loaded tidyverse
 library(tidyverse)
 ```
 
 
 ```{r, message=FALSE}
+# getting data
 MeaslesOutbreaks <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
 
 MeaslesVac1 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
@@ -22,23 +32,68 @@ MeaslesVac2 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
 ```
 
 ```{r}
+glimpse(MeaslesOutbreaks)
+glimpse(MeaslesVac1)
+glimpse(MeaslesVac2)
+```
+There are multiple variables for the same information in the outbreaks data. The variable names are not correct for the vaccinataion data. Look at missing values. 
+
+```{r}
+nrow(MeaslesOutbreaks)
+nrow(MeaslesVac1)
+nrow(MeaslesVac2)
+```
+The vaccine data doesn't have the same amount of cases so see which countries aren't included in the Vac2 data that are included in the Vac1 data. 
+
+## Data Wrangling
+```{r}
+# renamed varaibles so that they were one word and selected only the needed variables
+
 MeaslesOutbreaksClean <-
   MeaslesOutbreaks %>%
   rename("year" = "YEAR (DISPLAY)", "region" = "REGION (DISPLAY)", "income_group" = "WORLDBANKINCOMEGROUP (DISPLAY)", "country" = "COUNTRY (DISPLAY)", "outbreaks" = "Display Value") %>%
   select(year, region, income_group, country, outbreaks)
 
-MeaslesOutbreaksClean
+head(MeaslesOutbreaksClean)
 ```
 
 ```{r}
-"data" <- MeaslesVac1
+# makes variable names the contents of the first row
+colnames(MeaslesVac1) <- as.character(unlist(MeaslesVac1[1,]))
 
-names(data)[2]<-"2018"
-names(data)[3]<-"2017"
-names(data)[4]<-"2016"
+# takes out first row (repeat of variable names)
+MeaslesVac1 = MeaslesVac1[-1, ]
 
-# clean so that first row is the variable name (can I use a loop)
+head(MeaslesVac1)
+```
+```{r}
+# makes variable names the contents of the first row
+colnames(MeaslesVac2) <- as.character(unlist(MeaslesVac2[1,]))
 
-data
+# takes out first row (repeat of variable names)
+MeaslesVac2 = MeaslesVac2[-1, ]
+
+head(MeaslesVac2)
+```
+
+### Vaccine Data Together
+```{r}
+MeaslesVac1Narrow <-
+  MeaslesVac1 %>%
+  select(Country, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`) %>%
+  gather(key = "year", value = vac1, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`)
+
+MeaslesVac2Narrow <-
+  MeaslesVac2 %>%
+  select(Country, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`) %>%
+  gather(key = "year", value = vac2, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`)
+```
+```{r}
+MeaslesVacBoth <-
+  left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = "Country", "Country")
+  
+MeaslesVacBoth
+
+
 ```
 
