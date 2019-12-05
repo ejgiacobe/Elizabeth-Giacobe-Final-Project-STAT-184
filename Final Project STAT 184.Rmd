@@ -46,6 +46,11 @@ nrow(MeaslesVac2)
 The vaccine data doesn't have the same amount of cases so see which countries aren't included in the Vac2 data that are included in the Vac1 data. 
 
 ## Data Wrangling
+Skills used: 
+* data verbs (filter, mutate, summarise, arrange, group_by)  
+* joins for multiple data tables  
+* spread & gather to stack/unstack variables  
+(+) regular expressions (+) reduction and/or transformation functions like mean, sum, max, min, n(), rank, pmin, etc. (+) user-defined functions (+) loops and control flow (+) machine learning
 ```{r}
 # renamed varaibles so that they were one word and selected only the needed variables
 
@@ -90,10 +95,28 @@ MeaslesVac2Narrow <-
 ```
 ```{r}
 MeaslesVacBoth <-
-  left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = c("Country", "year"))
+  left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = c("Country", "year")) %>%
+  rename("country"= "Country")
   
 MeaslesVacBoth
+```
+```{r}
+MeaslesOutbreaksSum <-
+  MeaslesOutbreaksClean %>%
+  group_by(year, country) %>%
+  summarise(outbreaks = sum(outbreaks)) %>%
+  filter(grepl("^20", year))
 
+MeaslesOutbreaksSum
+```
+```{r}
+MeaslesVacBoth <-
+  MeaslesVacBoth %>%
+  mutate(year = as.numeric(year))
 
+Measles <-
+  inner_join(MeaslesOutbreaksSum, MeaslesVacBoth, by = c("country", "year"))
+
+Measles
 ```
 
