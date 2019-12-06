@@ -39,7 +39,7 @@ Countries <-
   select(COUNTRY, AMOUNT, DATE) %>%
   rename(country = COUNTRY, pop_dens = AMOUNT, year = DATE) %>%
   mutate(pop_dens = readr::parse_number(pop_dens)) %>%
-  filter(country != grepl("[land$]", country))
+  filter(!grepl("[(profile)]$", country))
 
 Countries
 ```
