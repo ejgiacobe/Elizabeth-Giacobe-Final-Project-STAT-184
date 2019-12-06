@@ -22,17 +22,41 @@ library(rvest)
 ```
 
 ```{r}
-page <- "https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita"
-tableList <- page %>%
+page2 <- "https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance"
+tableList2 <- page2 %>%
   read_html() %>%
   html_nodes(css = "table") %>%
   html_table(fill = TRUE)
 
-length(tableList)
-RawCountries <- tableList[[1]]
+length(tableList1)
+RawTransport <- tableList2[[1]]
+
+RawTransport
+```
+```{r}
+Transport <-
+  RawTransport %>%
+  select(COUNTRY, AMOUNT, DATE) %>%
+  rename(country = COUNTRY, distance = AMOUNT, year = DATE) %>%
+  mutate(distance = readr::parse_number(distance))
+
+Transport
+```
+
+
+```{r}
+page1 <- "https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita"
+tableList1 <- page1 %>%
+  read_html() %>%
+  html_nodes(css = "table") %>%
+  html_table(fill = TRUE)
+
+length(tableList1)
+RawCountries <- tableList1[[1]]
 
 RawCountries
 ```
+
 ```{r}
 Countries <-
   RawCountries %>%
@@ -143,6 +167,24 @@ Measles <-
   inner_join(MeaslesOutbreaksSum, MeaslesVacBoth, by = c("country", "year"))
 
 Measles
+```
+
+```{r}
+CountriesTransportPop <-
+  inner_join(Countries, Transport, by = c("country", "year"))
+
+CountriesTransportPop
+```
+```{r}
+MeaslesPop <-
+  left_join(Countries, Measles, by = c("country", "year"))
+
+MeaslesPop
+
+MeaslesPopTransport <-
+  left_join(Transport, MeaslesPop, by = c("country", "year"))
+
+MeaslesPopTransport
 ```
 
 ## Data Visualization
