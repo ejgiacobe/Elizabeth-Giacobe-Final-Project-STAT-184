@@ -1770,16 +1770,48 @@ MeaslesOutbreaks
 MeaslesVac1
 MeaslesVac2
 </code></pre>
-<p>```</p>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+
+https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance
+
+https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita
+
+https://www.who.int/gho/database/en/
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtb3NhaWNEYXRhKVxuXG5zdHIoQ291bnRyaWVzKVxuYGBgIn0= --&gt;
+
+```r
+library(mosaicData)
+
+str(Countries)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJ2RhdGEuZnJhbWUnOlx0Mjg4IG9icy4gb2YgIDMgdmFyaWFibGVzOlxuICQgbWFwdG9vbHMgOiBjaHIgIFwiQWZnaGFuaXN0YW5cIiBcIsOFbGFuZCBJc2xhbmRzXCIgXCJBbGJhbmlhXCIgXCJBbGdlcmlhXCIgLi4uXG4gJCBtYXBzICAgICA6IGNociAgXCJBZmdoYW5pc3RhblwiIE5BIFwiQWxiYW5pYVwiIFwiQWxnZXJpYVwiIC4uLlxuICQgZ2FwbWluZGVyOiBjaHIgIFwiQWZnaGFuaXN0YW5cIiBOQSBcIkFsYmFuaWFcIiBcIkFsZ2VyaWFcIiAuLi5cbiJ9 -->
+<pre><code>&#39;data.frame&#39;:   288 obs. of  3 variables:
+ $ maptools : chr  &quot;Afghanistan&quot; &quot;Åland Islands&quot; &quot;Albania&quot; &quot;Algeria&quot; ...
+ $ maps     : chr  &quot;Afghanistan&quot; NA &quot;Albania&quot; &quot;Algeria&quot; ...
+ $ gapminder: chr  &quot;Afghanistan&quot; NA &quot;Albania&quot; &quot;Algeria&quot; ...</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p><a href="https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance" class="uri">https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance</a></p>
-<p><a href="https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita" class="uri">https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita</a></p>
-<p><a href="https://www.who.int/gho/database/en/" class="uri">https://www.who.int/gho/database/en/</a></p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3J9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmBgYA0KDQoNCmBgYHtyfQ0KTWVhc2xlc091dGJyZWFrcyA8LSByZWFkX2NzdigiQzpcXFVzZXJzXFxMaXp6aWVcXERvd25sb2Fkc1xcTWVhc2xlc091dGJyZWFrcy5jc3YiKQ0KDQpNZWFzbGVzVmFjMSA8LSByZWFkX2NzdigiQzpcXFVzZXJzXFxMaXp6aWVcXERvd25sb2Fkc1xcTWVhc2xlczFWYWMuY3N2IikNCg0KTWVhc2xlc1ZhYzIgPC0gcmVhZF9jc3YoIkM6XFxVc2Vyc1xcTGl6emllXFxEb3dubG9hZHNcXE1lYXNsZXMyVmFjLmNzdiIpDQoNCk1lYXNsZXNPdXRicmVha3MNCk1lYXNsZXNWYWMxDQpNZWFzbGVzVmFjMg0KDQpgYGANCg0KDQoNCmh0dHBzOi8vd3d3Lm5hdGlvbm1hc3Rlci5jb20vY291bnRyeS1pbmZvL3N0YXRzL1RyYW5zcG9ydC9Db21tdXRlL0Rpc3RhbmNlDQoNCmh0dHBzOi8vd3d3Lm5hdGlvbm1hc3Rlci5jb20vY291bnRyeS1pbmZvL3N0YXRzL0dlb2dyYXBoeS9BcmVhL0xhbmQvUGVyLWNhcGl0YQ0KDQpodHRwczovL3d3dy53aG8uaW50L2doby9kYXRhYmFzZS9lbi8NCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3J9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmBgYA0KDQoNCmBgYHtyfQ0KTWVhc2xlc091dGJyZWFrcyA8LSByZWFkX2NzdigiQzpcXFVzZXJzXFxMaXp6aWVcXERvd25sb2Fkc1xcTWVhc2xlc091dGJyZWFrcy5jc3YiKQ0KDQpNZWFzbGVzVmFjMSA8LSByZWFkX2NzdigiQzpcXFVzZXJzXFxMaXp6aWVcXERvd25sb2Fkc1xcTWVhc2xlczFWYWMuY3N2IikNCg0KTWVhc2xlc1ZhYzIgPC0gcmVhZF9jc3YoIkM6XFxVc2Vyc1xcTGl6emllXFxEb3dubG9hZHNcXE1lYXNsZXMyVmFjLmNzdiIpDQoNCk1lYXNsZXNPdXRicmVha3MNCk1lYXNsZXNWYWMxDQpNZWFzbGVzVmFjMg0KDQpgYGANCg0KDQoNCmh0dHBzOi8vd3d3Lm5hdGlvbm1hc3Rlci5jb20vY291bnRyeS1pbmZvL3N0YXRzL1RyYW5zcG9ydC9Db21tdXRlL0Rpc3RhbmNlDQoNCmh0dHBzOi8vd3d3Lm5hdGlvbm1hc3Rlci5jb20vY291bnRyeS1pbmZvL3N0YXRzL0dlb2dyYXBoeS9BcmVhL0xhbmQvUGVyLWNhcGl0YQ0KDQpodHRwczovL3d3dy53aG8uaW50L2doby9kYXRhYmFzZS9lbi8NCg0KYGBge3J9DQpsaWJyYXJ5KG1vc2FpY0RhdGEpDQoNCnN0cihDb3VudHJpZXMpDQpgYGANCg0K</div>
 
 
 

@@ -27,3 +27,10 @@ https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance
 https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita
 
 https://www.who.int/gho/database/en/
+
+```{r}
+library(mosaicData)
+
+str(Countries)
+```
+

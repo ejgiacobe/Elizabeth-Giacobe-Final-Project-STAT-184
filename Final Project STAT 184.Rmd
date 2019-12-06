@@ -18,6 +18,30 @@ rm(list = ls())
 
 #loaded tidyverse
 library(tidyverse)
+library(rvest)
+```
+
+```{r}
+page <- "https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita"
+tableList <- page %>%
+  read_html() %>%
+  html_nodes(css = "table") %>%
+  html_table(fill = TRUE)
+
+length(tableList)
+RawCountries <- tableList[[1]]
+
+RawCountries
+```
+```{r}
+Countries <-
+  RawCountries %>%
+  select(COUNTRY, AMOUNT, DATE) %>%
+  rename(country = COUNTRY, pop_dens = AMOUNT, year = DATE) %>%
+  mutate(pop_dens = readr::parse_number(pop_dens)) %>%
+  filter(country != grepl("[land$]", country))
+
+Countries
 ```
 
 
