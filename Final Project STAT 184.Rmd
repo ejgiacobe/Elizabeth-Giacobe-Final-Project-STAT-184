@@ -28,7 +28,7 @@ tableList2 <- page2 %>%
   html_nodes(css = "table") %>%
   html_table(fill = TRUE)
 
-length(tableList1)
+length(tableList2)
 RawTransport <- tableList2[[1]]
 
 RawTransport
@@ -36,8 +36,8 @@ RawTransport
 ```{r}
 Transport <-
   RawTransport %>%
-  select(COUNTRY, AMOUNT, DATE) %>%
-  rename(country = COUNTRY, distance = AMOUNT, year = DATE) %>%
+  select(COUNTRY, AMOUNT) %>%
+  rename(country = COUNTRY, distance = AMOUNT) %>%
   mutate(distance = readr::parse_number(distance))
 
 Transport
@@ -60,8 +60,8 @@ RawCountries
 ```{r}
 Countries <-
   RawCountries %>%
-  select(COUNTRY, AMOUNT, DATE) %>%
-  rename(country = COUNTRY, pop_dens = AMOUNT, year = DATE) %>%
+  select(COUNTRY, AMOUNT) %>%
+  rename(country = COUNTRY, pop_dens = AMOUNT) %>%
   mutate(pop_dens = readr::parse_number(pop_dens)) %>%
   filter(!grepl("[(profile)]$", country))
 
@@ -142,6 +142,7 @@ MeaslesVac2Narrow <-
   select(Country, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`) %>%
   gather(key = "year", value = vac2, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`)
 ```
+
 ```{r}
 MeaslesVacBoth <-
   left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = c("Country", "year")) %>%
@@ -149,6 +150,7 @@ MeaslesVacBoth <-
   
 MeaslesVacBoth
 ```
+
 ```{r}
 MeaslesOutbreaksSum <-
   MeaslesOutbreaksClean %>%
@@ -158,6 +160,7 @@ MeaslesOutbreaksSum <-
 
 MeaslesOutbreaksSum
 ```
+
 ```{r}
 MeaslesVacBoth <-
   MeaslesVacBoth %>%
@@ -170,21 +173,26 @@ Measles
 ```
 
 ```{r}
-CountriesTransportPop <-
-  inner_join(Countries, Transport, by = c("country", "year"))
+Measles %>%
+  group_by(year) %>%
+  summarise(count = n_distinct(country)) %>%
+  arrange(desc(count))
 
-CountriesTransportPop
+MeaslesSml <-
+  Measles %>%
+  filter(year == 2004)
 ```
+
+
 ```{r}
 MeaslesPop <-
-  left_join(Countries, Measles, by = c("country", "year"))
-
-MeaslesPop
+  inner_join(Countries, MeaslesSml, by = "country", "country")
 
 MeaslesPopTransport <-
-  left_join(Transport, MeaslesPop, by = c("country", "year"))
+  inner_join(Transport, MeaslesPop, by = "country", "country")
 
 MeaslesPopTransport
 ```
+
 
 ## Data Visualization
