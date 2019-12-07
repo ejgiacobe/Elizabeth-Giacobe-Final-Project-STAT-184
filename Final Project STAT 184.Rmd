@@ -15,10 +15,8 @@ rm(list = ls())
 #loaded needed packages
 library(tidyverse)
 library(rvest)
-library(party)
 library(rpart)
 library(rpart.plot)
-library(leaflet)
 ```
 
 ## Data Access
@@ -41,7 +39,7 @@ Note: There are many variables that aren't needed. The distances have units in t
 
 ### Population Density Data
 ```{r}
-page1 <- "https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita"
+page1 <- "http://worldpopulationreview.com/countries/countries-by-density/"
 tableList1 <- page1 %>%
   read_html() %>%
   html_nodes(css = "table") %>%
@@ -125,10 +123,11 @@ head(Transport)
 ```{r}
 Countries <-
   RawCountries %>%
-  select(COUNTRY, AMOUNT) %>%
-  rename(country = COUNTRY, pop_dens = AMOUNT) %>%
-  mutate(pop_dens = readr::parse_number(pop_dens)) %>%
-  filter(!grepl("[(profile)]$", country))
+  select(X2, X3) %>%
+  rename(country = X2, pop_dens = X3) %>%
+  mutate(pop_dens = readr::parse_number(pop_dens)) 
+
+Countries = Countries[-1, ]
 
 head(Countries)
 ```
@@ -269,10 +268,8 @@ head(Measles)
 ```
 
 #### Joining Population Density, Commute Distance, and Coordinate Data to Measles Data
-```{r}
-MeaslesPop <-
-  inner_join(Countries, Measles, by = "country", "country")
 
+```{r}
 MeaslesPop <-
   inner_join(MeaslesPop, Populations, by = "country", "country")
 
@@ -318,7 +315,7 @@ summary(mod1)
 ```
 
 Conclusions: 
-Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), the population (alpha = 0.001), and average commute distance (0.1). The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries. 
+Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), the population (alpha = 0.001), and the second vaccine (alpha = 0.05). The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries. 
 
 ## Data Visualization
 ```{r fig.height=7, fig.width=12}
