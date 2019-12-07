@@ -8,22 +8,22 @@ output: html_notebook
 - How does the measles virus spread in different areas?
 - Does population density and travel distance affect this? 
 
-
-## Data Access
-*(3) Access to all data sources is contained within the analysis*
-
+## Set Up  
 ```{r, message= FALSE}
 #clean ups
 rm(list = ls()) 
 
-#loaded tidyverse
+#loaded needed packages
 library(tidyverse)
 library(rvest)
 library(party)
 library(rpart)
 library(rpart.plot)
+library(leaflet)
 ```
 
+## Data Access
+### Commute Distance Data
 ```{r}
 page2 <- "https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance"
 tableList2 <- page2 %>%
@@ -31,22 +31,14 @@ tableList2 <- page2 %>%
   html_nodes(css = "table") %>%
   html_table(fill = TRUE)
 
-length(tableList2)
 RawTransport <- tableList2[[1]]
 
-RawTransport
-```
-```{r}
-Transport <-
-  RawTransport %>%
-  select(COUNTRY, AMOUNT) %>%
-  rename(country = COUNTRY, distance = AMOUNT) %>%
-  mutate(distance = readr::parse_number(distance))
-
-Transport
+head(RawTransport)
 ```
 
+Note: There are many variables that aren't needed. The distances have units in them and they are character strings. 
 
+### Population Density Data
 ```{r}
 page1 <- "https://www.nationmaster.com/country-info/stats/Geography/Area/Land/Per-capita"
 tableList1 <- page1 %>%
@@ -54,12 +46,66 @@ tableList1 <- page1 %>%
   html_nodes(css = "table") %>%
   html_table(fill = TRUE)
 
-length(tableList1)
 RawCountries <- tableList1[[1]]
 
-RawCountries
+head(RawCountries)
 ```
 
+Note: There are variables that aren't needed. The population densities have units and are character strings. 
+
+### Latitude and Longitude Data
+```{r}
+page3 <- "http://techslides.com/list-of-countries-and-capitals"
+tableList3 <- page3 %>%
+  read_html() %>%
+  html_nodes(css = "table") %>%
+  html_table(fill = TRUE)
+
+RawLatLon <- tableList3[[1]]
+
+head(RawLatLon)
+```
+
+Note: The first row is the variable names. The latitude and longitude are both character strings. 
+
+### Measles Data
+```{r, message=FALSE}
+# getting data
+MeaslesOutbreaksRaw <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
+
+MeaslesVac1Raw <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
+
+MeaslesVac2Raw <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
+
+head(MeaslesOutbreaksRaw)
+head(MeaslesVac1Raw)
+head(MeaslesVac2Raw)
+```
+  
+Note: There are multiple variables for the same information in the outbreaks data. The variable names are not correct for the vaccinataion data.
+
+```{r}
+nrow(MeaslesOutbreaksRaw)
+nrow(MeaslesVac1Raw)
+nrow(MeaslesVac2Raw)
+```
+  
+Note: The vaccine data doesn't have the same amount of cases so see which countries aren't included in the Vac2 data that are included in the Vac1 data. 
+
+## Data Wrangling
+### Cleaning Data
+#### Commute Distance Data
+```{r}
+Transport <-
+  RawTransport %>%
+  select(COUNTRY, AMOUNT) %>%
+  rename(country = COUNTRY, distance = AMOUNT) %>%
+  mutate(distance = readr::parse_number(distance))
+
+head(Transport)
+```
+
+#### Population Density Data
 ```{r}
 Countries <-
   RawCountries %>%
@@ -68,122 +114,135 @@ Countries <-
   mutate(pop_dens = readr::parse_number(pop_dens)) %>%
   filter(!grepl("[(profile)]$", country))
 
-Countries
+head(Countries)
 ```
 
-
-```{r, message=FALSE}
-# getting data
-MeaslesOutbreaks <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
-
-MeaslesVac1 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
-
-MeaslesVac2 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
-
-MeaslesOutbreaks
-```
-
+#### Latitude and Longitude Data
 ```{r}
-glimpse(MeaslesOutbreaks)
-glimpse(MeaslesVac1)
-glimpse(MeaslesVac2)
+LatLon <-
+  RawLatLon %>%
+  rename("country" = "X1", "capital" = "X2", "lat" = "X3", "lon" = "X4") %>%
+  select(country, lat, lon) %>%
+  mutate(lat = as.numeric(lat)) %>%
+  mutate(lon = as.numeric(lon))
+
+LatLon = LatLon[-1, ]
+
+head(LatLon)
 ```
-There are multiple variables for the same information in the outbreaks data. The variable names are not correct for the vaccinataion data. Look at missing values. 
 
+#### Measles Data
+##### Outbreaks
 ```{r}
-nrow(MeaslesOutbreaks)
-nrow(MeaslesVac1)
-nrow(MeaslesVac2)
-```
-The vaccine data doesn't have the same amount of cases so see which countries aren't included in the Vac2 data that are included in the Vac1 data. 
-
-## Data Wrangling
-Skills used: 
-* data verbs   
-* joins for multiple data tables  
-* spread & gather to stack/unstack variables  
-* reduction and/or transformation functions (mean, sum, max, min, n(), rank, pmin) 
-* machine learning
-```{r}
-# renamed varaibles so that they were one word and selected only the needed variables
-
-MeaslesOutbreaksClean <-
-  MeaslesOutbreaks %>%
+MeaslesOutbreaks <-
+  MeaslesOutbreaksRaw %>%
   rename("year" = "YEAR (DISPLAY)", "region" = "REGION (DISPLAY)", "income_group" = "WORLDBANKINCOMEGROUP (DISPLAY)", "country" = "COUNTRY (DISPLAY)", "outbreaks" = "Display Value") %>%
-  select(year, region, income_group, country, outbreaks)
+  select(year, region, country, outbreaks)
 
-head(MeaslesOutbreaksClean)
+head(MeaslesOutbreaks)
 ```
 
+##### Vaccine 1
 ```{r}
 # makes variable names the contents of the first row
-colnames(MeaslesVac1) <- as.character(unlist(MeaslesVac1[1,]))
+colnames(MeaslesVac1Raw) <- as.character(unlist(MeaslesVac1Raw[1,]))
 
 # takes out first row (repeat of variable names)
-MeaslesVac1 = MeaslesVac1[-1, ]
+MeaslesVac1 = MeaslesVac1Raw[-1, ]
 
 head(MeaslesVac1)
 ```
+
 ```{r}
-# makes variable names the contents of the first row
-colnames(MeaslesVac2) <- as.character(unlist(MeaslesVac2[1,]))
-
-# takes out first row (repeat of variable names)
-MeaslesVac2 = MeaslesVac2[-1, ]
-
-head(MeaslesVac2)
-```
-
-### Vaccine Data Together
-```{r}
+# used the gather function to make Vac1 narrow
 MeaslesVac1Narrow <-
   MeaslesVac1 %>%
   select(Country, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`) %>%
   gather(key = "year", value = vac1, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`)
 
+head(MeaslesVac1Narrow)
+```
+
+Note: Year is a character string not a number
+
+```{r}
+MeaslesVac1Narrow <-
+  MeaslesVac1Narrow %>%
+  mutate(year = as.numeric(year))
+
+head(MeaslesVac1Narrow)
+```
+
+##### Vaccine 2
+```{r}
+# makes variable names the contents of the first row
+colnames(MeaslesVac2Raw) <- as.character(unlist(MeaslesVac2Raw[1,]))
+
+# takes out first row (repeat of variable names)
+MeaslesVac2 = MeaslesVac2Raw[-1, ]
+
+head(MeaslesVac2)
+```
+
+```{r}
+# used the gather function to make Vac2 narrow
 MeaslesVac2Narrow <-
   MeaslesVac2 %>%
   select(Country, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`) %>%
   gather(key = "year", value = vac2, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`, `2013`, `2014`, `2015`, `2016`, `2017`, `2018`)
+
+head(MeaslesVac2Narrow)
 ```
 
+Note: Year is a character string not a number
+
 ```{r}
-MeaslesVacBoth <-
+MeaslesVac2Narrow <-
+  MeaslesVac2Narrow %>%
+  mutate(year = as.numeric(year))
+
+head(MeaslesVac2Narrow)
+```
+
+### Summarizing Outbreak Data
+```{r}
+MeaslesOutbreaksSum <-
+  MeaslesOutbreaks %>%
+  group_by(year, country, region) %>%
+  summarise(outbreaks = sum(outbreaks)) %>%
+  filter(grepl("^20", year)) %>%
+  arrange(desc(outbreaks))
+
+head(MeaslesOutbreaksSum)
+```
+
+### Joining Data
+#### Joining Vaccine 1 and Vaccine 2 Data
+```{r}
+MeaslesVac <-
   left_join(MeaslesVac1Narrow, MeaslesVac2Narrow, by = c("Country", "year")) %>%
   rename("country"= "Country")
   
-MeaslesVacBoth
+head(MeaslesVac)
 ```
 
+#### Joining Vaccine and Oubreaks Data
 ```{r}
-MeaslesOutbreaksSum <-
-  MeaslesOutbreaksClean %>%
-  group_by(year, country, region) %>%
-  summarise(outbreaks = sum(outbreaks)) %>%
-  filter(grepl("^20", year))
-
-MeaslesOutbreaksSum
-```
-
-```{r}
-MeaslesVacBoth <-
-  MeaslesVacBoth %>%
-  mutate(year = as.numeric(year))
-
 Measles <-
-  inner_join(MeaslesOutbreaksSum, MeaslesVacBoth, by = c("country", "year"))
+  inner_join(MeaslesOutbreaksSum, MeaslesVac, by = c("country", "year")) %>%
+  arrange(desc(outbreaks))
 
-Measles
+head(Measles)
 ```
 
 ```{r}
-Measles %>%
-  group_by(year) %>%
-  summarise(count = n_distinct(country)) %>%
-  arrange(desc(count))
+#Measles %>%
+  #group_by(year) %>%
+  #summarise(count = n_distinct(country)) %>%
+  #arrange(desc(count))
 ```
 
-
+#### Joining Population Density, Commute Distance, and Coordinate Data to Measles Data
 ```{r}
 MeaslesPop <-
   inner_join(Countries, Measles, by = "country", "country")
@@ -191,17 +250,15 @@ MeaslesPop <-
 MeaslesPopTransport <-
   inner_join(Transport, MeaslesPop, by = "country", "country")
 
-MeaslesPopTransport
+MeaslesFull <-
+  inner_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
+  arrange(desc(outbreaks))
+
+head(MeaslesFull)
 ```
 
 
 ## Data Visualization
-(*1*) relevant to stated research question for the analysis, (*2*) include at least one effective display of many--at least 3--variables, and (*3*) include 3 of the following 6 visualization techniques learned in STAT 184: 
-* use of multiple geoms such as points, density, lines, segments, boxplots, bar charts, histograms, etc 
-* use of multiple aesthetics--not necessarily all in the same graph--such as color, size, shape, x/y position, facets, etc 
-* leaflet maps 
-* decision tree and/or dendogram displaying machine learning model results
-
 ```{r fig.width=8}
 MeaslesPopTransport %>%
   mutate(vac_tot = vac1 + vac2) %>%
@@ -210,54 +267,20 @@ MeaslesPopTransport %>%
 ```
 
 ```{r}
-mod1 <-
-  MeaslesPopTransport %>%
-  mutate(vac_tot = vac1 + vac2) %>%
-  rpart(outbreaks ~ pop_dens + distance + vac_tot, data = .)
-
-prp(mod1)
-```
-
-
-```{r}
-page3 <- "http://techslides.com/list-of-countries-and-capitals"
-tableList3 <- page3 %>%
-  read_html() %>%
-  html_nodes(css = "table") %>%
-  html_table(fill = TRUE)
-
-length(tableList3)
-RawLatLon <- tableList3[[1]]
-
-RawLatLon
-```
-```{r}
-LatLng <-
-  RawLatLon %>%
-  rename("country" = "X1", "capital" = "X2", "lat" = "X3", "lng" = "X4") %>%
-  select(country, lat, lng) %>%
-  mutate(lat = as.numeric(lat)) %>%
-  mutate(lng = as.numeric(lng))
-
-LatLng = LatLng[-1, ]
-
-LatLng
+# machine learning
 ```
 
 ```{r}
-MeaslesFull <-
-  left_join(MeaslesPopTransport, LatLng, by = "country", "country")
-```
-
-
-```{r}
-library(leaflet)
+MapReadyMeasles <-
+  MeaslesFull %>%
+  group_by(lat, lon) %>%
+  summarise(tot_outbreaks = sum(outbreaks))
 
 MeaslesMap <-
-  leaflet(MeaslesFull) %>%   # like ggplot()
+  leaflet(MapReadyMeasles) %>%   # like ggplot()
   addTiles() %>%          # add the map
   addCircleMarkers(radius=0.01, color="red") %>%
-  addCircles(radius = ~500 , color = "blue", opacity = 0.0001)
+  addCircles(radius = ~(tot_outbreaks) , color = "blue", opacity = 0.0001)
 
 MeaslesMap
 ```
