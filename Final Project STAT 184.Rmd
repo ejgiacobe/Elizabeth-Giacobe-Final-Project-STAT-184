@@ -68,6 +68,19 @@ head(RawLatLon)
 
 Note: The first row is the variable names. The latitude and longitude are both character strings. 
 
+### Population Data
+```{r}
+page4 <- "http://worldpopulationreview.com/countries/"
+tableList4 <- page4 %>%
+  read_html() %>%
+  html_nodes(css = "table") %>%
+  html_table(fill = TRUE)
+
+RawPopulations <- tableList4[[1]]
+
+head(RawPopulations)
+```
+
 ### Measles Data
 ```{r, message=FALSE}
 # getting data
@@ -129,6 +142,19 @@ LatLon <-
 LatLon = LatLon[-1, ]
 
 head(LatLon)
+```
+
+#### Population Data
+```{r}
+Populations <-
+  RawPopulations %>%
+  rename("country" = "X2", "population" = "X3") %>%
+  select(country, population) %>%
+  mutate(population = readr::parse_number(population))
+
+Populations = Populations[-1, ]
+
+head(Populations)
 ```
 
 #### Measles Data
@@ -247,27 +273,49 @@ head(Measles)
 MeaslesPop <-
   inner_join(Countries, Measles, by = "country", "country")
 
+MeaslesPop <-
+  inner_join(MeaslesPop, Populations, by = "country", "country")
+
 MeaslesPopTransport <-
   inner_join(Transport, MeaslesPop, by = "country", "country")
 
 MeaslesFull <-
   inner_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
+  mutate(vac_tot = vac1 + vac2) %>%
   arrange(desc(outbreaks))
 
 head(MeaslesFull)
 ```
 
-
-## Data Visualization
-```{r fig.width=8}
-MeaslesPopTransport %>%
-  mutate(vac_tot = vac1 + vac2) %>%
-  ggplot() +
-  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region))
+### Summarizing Data
+```{r}
+HighRisk <-
+  Measles %>%
+  group_by(country, region) %>%
+  summarise(tot_outbreaks = sum(outbreaks), tot_years = n_distinct(year)) %>%
+  mutate(avg_outbreaks = tot_outbreaks/tot_years) %>%
+  filter(avg_outbreaks > 5000)
 ```
 
 ```{r}
-# machine learning
+  HighRisk %>%
+  group_by(region) %>%
+  summarise(prop = (n_distinct(country))/(21)) %>%
+  arrange(desc(prop))
+```
+
+```{r}
+mod1 <-
+  lm(outbreaks ~ vac1 + vac2 + pop_dens + year + population + distance, data = MeaslesFull)
+summary(mod1)
+```
+
+## Data Visualization
+```{r fig.width=8}
+Measles %>%
+  mutate(vac_tot = vac1 + vac2) %>%
+  ggplot() +
+  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region))
 ```
 
 ```{r}
