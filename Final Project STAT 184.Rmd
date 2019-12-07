@@ -77,6 +77,7 @@ MeaslesVac1 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
 
 MeaslesVac2 <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
 
+MeaslesOutbreaks
 ```
 
 ```{r}
@@ -197,8 +198,7 @@ MeaslesPopTransport
 
 ## Data Visualization
 (*1*) relevant to stated research question for the analysis, (*2*) include at least one effective display of many--at least 3--variables, and (*3*) include 3 of the following 6 visualization techniques learned in STAT 184: 
-(+) use of multiple geoms such as points, density, lines, segments, boxplots, bar charts, histograms, etc 
-(+) use of multiple aesthetics--not necessarily all in the same graph--such as color, size, shape, x/y position, facets, etc 
-(+) layered graphics such as points and accompanying smoother, points and accompanying boxplots, overlaid density distributions, etc 
-(+) leaflet maps 
-(+) decision tree and/or dendogram displaying machine learning model results
+* use of multiple geoms such as points, density, lines, segments, boxplots, bar charts, histograms, etc 
+* use of multiple aesthetics--not necessarily all in the same graph--such as color, size, shape, x/y position, facets, etc 
+* leaflet maps 
+* decision tree and/or dendogram displaying machine learning model results
