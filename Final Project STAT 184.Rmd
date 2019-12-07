@@ -22,6 +22,8 @@ library(leaflet)
 ```
 
 ## Data Access
+I accessed all data that will be used to address the research question. The Measles data was downloaded from the World Health Organization's free database. The other data on the different countries was pulled from various published websites. This section is significant to the project because it is where I will get all of the data. 
+
 ### Commute Distance Data
 ```{r}
 page2 <- "https://www.nationmaster.com/country-info/stats/Transport/Commute/Distance"
@@ -106,6 +108,8 @@ Note: The vaccine data doesn't have the same amount of cases so see which countr
 
 ## Data Wrangling
 ### Cleaning Data
+During this section of the project I will clean the data so that it is in a form that I am able to use and combine with other data frames. This is important becacuse the data from off the web comes in multiple forms and they may not all match (which they don't). 
+
 #### Commute Distance Data
 ```{r}
 Transport <-
@@ -230,6 +234,8 @@ head(MeaslesVac2Narrow)
 ```
 
 ### Summarizing Outbreak Data
+I have to summarize the outbreak data so that I am able to join it with the other data frames and start looking for patterns. 
+
 ```{r}
 MeaslesOutbreaksSum <-
   MeaslesOutbreaks %>%
@@ -242,6 +248,8 @@ head(MeaslesOutbreaksSum)
 ```
 
 ### Joining Data
+It is essential to join the data so that we can look at the relationships between variables and address the research question. 
+
 #### Joining Vaccine 1 and Vaccine 2 Data
 ```{r}
 MeaslesVac <-
@@ -280,6 +288,7 @@ head(MeaslesFull)
 ```
 
 ### Summarizing Data
+To look for patterns in areas that have the most measles outbreaks I summarised the data to look for the countries with the highest risk of outbreaks and what regions they were in. 
 
 ```{r}
 HighRisk <-
@@ -300,11 +309,16 @@ HighRisk
   arrange(desc(prop))
 ```
 
+In this section I fit a linear model to the full data set. I printed the summary to look at the results of the significant factors on measles outbreaks. 
+
 ```{r}
 mod1 <-
-  lm(outbreaks ~ vac1 + vac2 + pop_dens + year + population + distance + lat + lon, data = MeaslesFull)
+  lm(outbreaks ~ vac1 + vac2 + pop_dens + year + population + distance, data = MeaslesFull)
 summary(mod1)
 ```
+
+Conclusions: 
+Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), the population (alpha = 0.001), and average commute distance (0.1). The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries. 
 
 ## Data Visualization
 ```{r fig.height=7, fig.width=12}
@@ -322,3 +336,4 @@ mod1 <- rpart(outbreaks ~ vac1 + vac2 + population + pop_dens + distance + year,
 prp(mod1)
 ```
 
+Conclusions: How does the measles virus spread over time, in different areas, and in different conditions such as population, population density, and average commute distance?
