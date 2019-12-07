@@ -19,6 +19,9 @@ rm(list = ls())
 #loaded tidyverse
 library(tidyverse)
 library(rvest)
+library(party)
+library(rpart)
+library(rpart.plot)
 ```
 
 ```{r}
@@ -155,7 +158,7 @@ MeaslesVacBoth
 ```{r}
 MeaslesOutbreaksSum <-
   MeaslesOutbreaksClean %>%
-  group_by(year, country) %>%
+  group_by(year, country, region) %>%
   summarise(outbreaks = sum(outbreaks)) %>%
   filter(grepl("^20", year))
 
@@ -178,16 +181,12 @@ Measles %>%
   group_by(year) %>%
   summarise(count = n_distinct(country)) %>%
   arrange(desc(count))
-
-MeaslesSml <-
-  Measles %>%
-  filter(year == 2004)
 ```
 
 
 ```{r}
 MeaslesPop <-
-  inner_join(Countries, MeaslesSml, by = "country", "country")
+  inner_join(Countries, Measles, by = "country", "country")
 
 MeaslesPopTransport <-
   inner_join(Transport, MeaslesPop, by = "country", "country")
@@ -202,3 +201,25 @@ MeaslesPopTransport
 * use of multiple aesthetics--not necessarily all in the same graph--such as color, size, shape, x/y position, facets, etc 
 * leaflet maps 
 * decision tree and/or dendogram displaying machine learning model results
+
+```{r fig.width=8}
+MeaslesPopTransport %>%
+  mutate(vac_tot = vac1 + vac2) %>%
+  ggplot() +
+  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region))
+```
+
+```{r}
+mod1 <-
+  MeaslesPopTransport %>%
+  mutate(vac_tot = vac1 + vac2) %>%
+  rpart(outbreaks ~ pop_dens + distance + vac_tot, data = .)
+
+prp(mod1)
+```
+
+
+#MeaslesSml <-
+  #Measles %>%
+  #filter(year == 2004| year == 2010 | year == 2011 | year == 2012)
+
