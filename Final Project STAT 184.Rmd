@@ -5,8 +5,7 @@ output: html_notebook
 ---
 
 ## Research Question
-- How does the measles virus spread in different areas?
-- Does population density and travel distance affect this? 
+- How does the measles virus spread over time, in different areas, and in different conditions such as population, population density, and average commute distance?
 
 ## Set Up  
 ```{r, message= FALSE}
@@ -261,13 +260,6 @@ Measles <-
 head(Measles)
 ```
 
-```{r}
-#Measles %>%
-  #group_by(year) %>%
-  #summarise(count = n_distinct(country)) %>%
-  #arrange(desc(count))
-```
-
 #### Joining Population Density, Commute Distance, and Coordinate Data to Measles Data
 ```{r}
 MeaslesPop <-
@@ -288,13 +280,17 @@ head(MeaslesFull)
 ```
 
 ### Summarizing Data
+
 ```{r}
 HighRisk <-
   Measles %>%
   group_by(country, region) %>%
   summarise(tot_outbreaks = sum(outbreaks), tot_years = n_distinct(year)) %>%
   mutate(avg_outbreaks = tot_outbreaks/tot_years) %>%
-  filter(avg_outbreaks > 5000)
+  filter(avg_outbreaks > 5000) %>%
+  arrange(desc(avg_outbreaks))
+
+HighRisk
 ```
 
 ```{r}
@@ -306,17 +302,26 @@ HighRisk <-
 
 ```{r}
 mod1 <-
-  lm(outbreaks ~ vac1 + vac2 + pop_dens + year + population + distance, data = MeaslesFull)
+  lm(outbreaks ~ vac1 + vac2 + pop_dens + year + population + distance + lat + lon, data = MeaslesFull)
 summary(mod1)
 ```
 
 ## Data Visualization
-```{r fig.width=8}
+```{r fig.height=7, fig.width=12}
 Measles %>%
   mutate(vac_tot = vac1 + vac2) %>%
   ggplot() +
-  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region))
+  stat_smooth(aes(x = vac_tot, y = outbreaks)) +
+  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region)) +
+  ylim(0, 140000) + 
+  facet_wrap(~ region)
 ```
+
+```{r}
+mod1 <- rpart(outbreaks ~ vac1 + vac2 + population + pop_dens + distance + year, data = MeaslesFull)
+prp(mod1)
+```
+
 
 ```{r}
 MapReadyMeasles <-
