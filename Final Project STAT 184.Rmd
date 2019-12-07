@@ -219,7 +219,46 @@ prp(mod1)
 ```
 
 
-#MeaslesSml <-
-  #Measles %>%
-  #filter(year == 2004| year == 2010 | year == 2011 | year == 2012)
+```{r}
+page3 <- "http://techslides.com/list-of-countries-and-capitals"
+tableList3 <- page3 %>%
+  read_html() %>%
+  html_nodes(css = "table") %>%
+  html_table(fill = TRUE)
+
+length(tableList3)
+RawLatLon <- tableList3[[1]]
+
+RawLatLon
+```
+```{r}
+LatLng <-
+  RawLatLon %>%
+  rename("country" = "X1", "capital" = "X2", "lat" = "X3", "lng" = "X4") %>%
+  select(country, lat, lng) %>%
+  mutate(lat = as.numeric(lat)) %>%
+  mutate(lng = as.numeric(lng))
+
+LatLng = LatLng[-1, ]
+
+LatLng
+```
+
+```{r}
+MeaslesFull <-
+  left_join(MeaslesPopTransport, LatLng, by = "country", "country")
+```
+
+
+```{r}
+library(leaflet)
+
+MeaslesMap <-
+  leaflet(MeaslesFull) %>%   # like ggplot()
+  addTiles() %>%          # add the map
+  addCircleMarkers(radius=0.01, color="red") %>%
+  addCircles(radius = ~500 , color = "blue", opacity = 0.0001)
+
+MeaslesMap
+```
 
