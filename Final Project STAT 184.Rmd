@@ -83,11 +83,11 @@ head(RawPopulations)
 ### Measles Data
 ```{r, message=FALSE}
 # getting data
-MeaslesOutbreaksRaw <- read_csv("C:\\Users\\Lizzie\\Downloads\\MeaslesOutbreaks.csv")
+MeaslesOutbreaksRaw <- read_csv("MeaslesOutbreaks.csv")
 
-MeaslesVac1Raw <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles1Vac.csv")
+MeaslesVac1Raw <- read_csv("Measles1Vac.csv")
 
-MeaslesVac2Raw <- read_csv("C:\\Users\\Lizzie\\Downloads\\Measles2Vac.csv")
+MeaslesVac2Raw <- read_csv("Measles2Vac.csv")
 
 head(MeaslesOutbreaksRaw)
 head(MeaslesVac1Raw)
@@ -320,21 +320,5 @@ Measles %>%
 ```{r}
 mod1 <- rpart(outbreaks ~ vac1 + vac2 + population + pop_dens + distance + year, data = MeaslesFull)
 prp(mod1)
-```
-
-
-```{r}
-MapReadyMeasles <-
-  MeaslesFull %>%
-  group_by(lat, lon) %>%
-  summarise(tot_outbreaks = sum(outbreaks))
-
-MeaslesMap <-
-  leaflet(MapReadyMeasles) %>%   # like ggplot()
-  addTiles() %>%          # add the map
-  addCircleMarkers(radius=0.01, color="red") %>%
-  addCircles(radius = ~(tot_outbreaks) , color = "blue", opacity = 0.0001)
-
-MeaslesMap
 ```
 
