@@ -105,6 +105,8 @@ nrow(MeaslesVac2Raw)
 Note: The vaccine data doesn't have the same amount of cases so see which countries aren't included in the Vac2 data that are included in the Vac1 data. 
 
 ## Data Wrangling
+***Note: I decided not to address the change in population, population density, and average commute distance because there was not enough data available for all countries and all years that I was observing***
+
 ### Cleaning Data
 During this section of the project I will clean the data so that it is in a form that I am able to use and combine with other data frames. This is important becacuse the data from off the web comes in multiple forms and they may not all match (which they don't). 
 
@@ -281,10 +283,9 @@ MeaslesPopTransport <-
 
 MeaslesFull <-
   left_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
-  mutate(vac_tot = vac1 + vac2) %>%
   arrange(desc(outbreaks))
 
-head(MeaslesPop)
+head(MeaslesFull)
 ```
 
 ### Summarizing Data
@@ -318,16 +319,21 @@ summary(mod1)
 ```
 
 Conclusions: 
-Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), the population (alpha = 0.001), and the second vaccine (alpha = 0.05). The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries. 
+***Note: After joining the data I decided not to recognize the vaccine 2 data in my analysis because there was too much missing data***  
+
+**Machine Learning Conclusions**  
+Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), and the population (alpha = 0.001).   
+
+**Other Conclusions**  
+The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries.  
 
 ## Data Visualization
 ```{r fig.height=7, fig.width=12}
 MeaslesFull %>%
-  mutate(vac_tot = vac1 + vac2) %>%
   ggplot() +
   stat_smooth(aes(x = vac1, y = outbreaks)) +
   geom_point(aes(x = vac1, y = outbreaks, alpha = 0.3, color = region)) +
-  ylim(0, 140000) + 
+  ylim(0, 150000) + 
   facet_wrap(~ region)
 ```
 
@@ -336,4 +342,10 @@ mod1 <- rpart(outbreaks ~ vac1 + vac2 + population + pop_dens + distance + year,
 prp(mod1)
 ```
 
-Conclusions: How does the measles virus spread over time, in different areas, and in different conditions such as population, population density, and average commute distance?
+Conclusions: 
+**Machine Learning Conclusions**  
+Countries with larget populations have more outbreaks. There were less outbreaks in countries with large populations if the year was greater than or equal to 2010. In countries with large populations before the year 2010, if there were less vaccinations there were less outbreaks. If there were more vaccinations there were more outbreaks. I found this surprising but it is likely due to the fact that many countries with large populations that vaccinate much of their population have few outbreaks but over the many years examined, the outbreaks add up to a many total.  
+There were less outbreaks in countries with the smallest populations, which makes sense because if there are less people there are less people that could get the virus. In countries with medium sized populations, if more were vaccinated there were less outbreaks. In countries with smaller populations, if the year was 2004 or after there were less outbreaks. In those same countries, if the year was before 2004 and there were more vaccinations, there were less outbreaks observed.  
+Some overall trends were that when populations were high there were more outbreaks and as the years progressed there were less outbreaks.  
+**Other Conclusions** 
+In Africa, South-East Asia, and the Eastern Mediterranean there was an overall negative correlation between first vaccinations and outbreaks. This was seen by the decreasing slope in the smoother lines. In Europe and the Americas, there were very few instances where countries had a high count of yearly outbreaks compared to the total number of instances with very few outbreaks. This was demonstrated by a very flat smoother line close to the x axis. The Western Pacific region was the most nonlinear and was the hardest to interpret. It seemed like there were many times where a country had high vaccination counts but still had high outbreaks. There were still many more occurances within the Western Pacific where there were high vaccination counts and low outbreak counts. 
