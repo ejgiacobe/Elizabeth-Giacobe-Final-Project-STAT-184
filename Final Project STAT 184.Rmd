@@ -318,11 +318,11 @@ mod1 <-
 summary(mod1)
 ```
 
-Conclusions: 
+Conclusions:  
 ***Note: After joining the data I decided not to recognize the vaccine 2 data in my analysis because there was too much missing data***  
 
 **Machine Learning Conclusions**  
-Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), and the population (alpha = 0.001).   
+Overall, the spread of the measles virus was significanly impacted by the year (alpha = 0.01), the first measles vaccine (alpha = 0.05), and the population (alpha = 0.001).  
 
 **Other Conclusions**  
 The regions in which the virus spreads the most are the Western Pacific, South-East Asia, Europe, and Africa, which had the highest proportion of total high outbreak countries.  
@@ -342,10 +342,10 @@ mod1 <- rpart(outbreaks ~ vac1 + vac2 + population + pop_dens + distance + year,
 prp(mod1)
 ```
 
-Conclusions: 
+Conclusions:  
 **Machine Learning Conclusions**  
 Countries with larget populations have more outbreaks. There were less outbreaks in countries with large populations if the year was greater than or equal to 2010. In countries with large populations before the year 2010, if there were less vaccinations there were less outbreaks. If there were more vaccinations there were more outbreaks. I found this surprising but it is likely due to the fact that many countries with large populations that vaccinate much of their population have few outbreaks but over the many years examined, the outbreaks add up to a many total.  
 There were less outbreaks in countries with the smallest populations, which makes sense because if there are less people there are less people that could get the virus. In countries with medium sized populations, if more were vaccinated there were less outbreaks. In countries with smaller populations, if the year was 2004 or after there were less outbreaks. In those same countries, if the year was before 2004 and there were more vaccinations, there were less outbreaks observed.  
 Some overall trends were that when populations were high there were more outbreaks and as the years progressed there were less outbreaks.  
-**Other Conclusions** 
+**Other Conclusions**  
 In Africa, South-East Asia, and the Eastern Mediterranean there was an overall negative correlation between first vaccinations and outbreaks. This was seen by the decreasing slope in the smoother lines. In Europe and the Americas, there were very few instances where countries had a high count of yearly outbreaks compared to the total number of instances with very few outbreaks. This was demonstrated by a very flat smoother line close to the x axis. The Western Pacific region was the most nonlinear and was the hardest to interpret. It seemed like there were many times where a country had high vaccination counts but still had high outbreaks. There were still many more occurances within the Western Pacific where there were high vaccination counts and low outbreak counts. 
