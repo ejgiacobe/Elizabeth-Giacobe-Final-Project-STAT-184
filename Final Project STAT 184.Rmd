@@ -271,17 +271,20 @@ head(Measles)
 
 ```{r}
 MeaslesPop <-
-  inner_join(MeaslesPop, Populations, by = "country", "country")
+  left_join(Measles, Countries, by = "country", "country")
+
+MeaslesPop <-
+  left_join(MeaslesPop, Populations, by = "country", "country")
 
 MeaslesPopTransport <-
-  inner_join(Transport, MeaslesPop, by = "country", "country")
+  left_join(MeaslesPop, Transport, by = "country", "country")
 
 MeaslesFull <-
-  inner_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
+  left_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
   mutate(vac_tot = vac1 + vac2) %>%
   arrange(desc(outbreaks))
 
-head(MeaslesFull)
+head(MeaslesPop)
 ```
 
 ### Summarizing Data
@@ -319,7 +322,7 @@ Overall, the spread of the measles virus was significanly impacted by the year (
 
 ## Data Visualization
 ```{r fig.height=7, fig.width=12}
-Measles %>%
+MeaslesFull %>%
   mutate(vac_tot = vac1 + vac2) %>%
   ggplot() +
   stat_smooth(aes(x = vac_tot, y = outbreaks)) +
