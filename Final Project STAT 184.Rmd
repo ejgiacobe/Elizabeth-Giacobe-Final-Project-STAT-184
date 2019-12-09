@@ -52,21 +52,6 @@ head(RawCountries)
 
 Note: There are variables that aren't needed. The population densities have units and are character strings. 
 
-### Latitude and Longitude Data
-```{r}
-page3 <- "http://techslides.com/list-of-countries-and-capitals"
-tableList3 <- page3 %>%
-  read_html() %>%
-  html_nodes(css = "table") %>%
-  html_table(fill = TRUE)
-
-RawLatLon <- tableList3[[1]]
-
-head(RawLatLon)
-```
-
-Note: The first row is the variable names. The latitude and longitude are both character strings. 
-
 ### Population Data
 ```{r}
 page4 <- "http://worldpopulationreview.com/countries/"
@@ -132,20 +117,6 @@ Countries <-
 Countries = Countries[-1, ]
 
 head(Countries)
-```
-
-#### Latitude and Longitude Data
-```{r}
-LatLon <-
-  RawLatLon %>%
-  rename("country" = "X1", "capital" = "X2", "lat" = "X3", "lon" = "X4") %>%
-  select(country, lat, lon) %>%
-  mutate(lat = as.numeric(lat)) %>%
-  mutate(lon = as.numeric(lon))
-
-LatLon = LatLon[-1, ]
-
-head(LatLon)
 ```
 
 #### Population Data
@@ -269,7 +240,7 @@ Measles <-
 head(Measles)
 ```
 
-#### Joining Population Density, Commute Distance, and Coordinate Data to Measles Data
+#### Joining Population, Population Density, and Commute Distance Data to Measles Data
 
 ```{r}
 MeaslesPop <-
@@ -278,11 +249,8 @@ MeaslesPop <-
 MeaslesPop <-
   left_join(MeaslesPop, Populations, by = "country", "country")
 
-MeaslesPopTransport <-
-  left_join(MeaslesPop, Transport, by = "country", "country")
-
 MeaslesFull <-
-  left_join(MeaslesPopTransport, LatLon, by = "country", "country") %>%
+  left_join(MeaslesPop, Transport, by = "country", "country") %>%
   arrange(desc(outbreaks))
 
 head(MeaslesFull)
