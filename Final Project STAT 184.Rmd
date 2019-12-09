@@ -325,8 +325,8 @@ Overall, the spread of the measles virus was significanly impacted by the year (
 MeaslesFull %>%
   mutate(vac_tot = vac1 + vac2) %>%
   ggplot() +
-  stat_smooth(aes(x = vac_tot, y = outbreaks)) +
-  geom_point(aes(x = vac_tot, y = outbreaks, alpha = 0.3, color = region)) +
+  stat_smooth(aes(x = vac1, y = outbreaks)) +
+  geom_point(aes(x = vac1, y = outbreaks, alpha = 0.3, color = region)) +
   ylim(0, 140000) + 
   facet_wrap(~ region)
 ```
