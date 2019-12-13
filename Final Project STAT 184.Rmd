@@ -68,11 +68,11 @@ head(RawPopulations)
 ### Measles Data
 ```{r, message=FALSE}
 # getting data
-MeaslesOutbreaksRaw <- read_csv("MeaslesOutbreaks.csv")
+MeaslesOutbreaksRaw <- read_csv("https://raw.githubusercontent.com/ejgiacobe/Final-Project-STAT-184/master/MeaslesOutbreaks.csv")
 
-MeaslesVac1Raw <- read_csv("Measles1Vac.csv")
+MeaslesVac1Raw <- read_csv("https://raw.githubusercontent.com/ejgiacobe/Final-Project-STAT-184/master/Measles1Vac.csv")
 
-MeaslesVac2Raw <- read_csv("Measles2Vac.csv")
+MeaslesVac2Raw <- read_csv("https://raw.githubusercontent.com/ejgiacobe/Final-Project-STAT-184/master/Measles2Vac.csv")
 
 head(MeaslesOutbreaksRaw)
 head(MeaslesVac1Raw)
